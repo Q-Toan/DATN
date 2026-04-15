@@ -6,18 +6,18 @@ import compression from 'compression';
 import morgan from 'morgan';
 import { rateLimit } from 'express-rate-limit';
 
-import authRoutes from './routes/auth.routes';
-import cartRoutes from './routes/cart.routes';
-import orderRoutes from './routes/order.routes';
-import productRoutes from './routes/product.routes';
-import couponRoutes from './routes/coupon.routes';
-import userRoutes from './routes/user.routes';
-import blogRoutes from './routes/blog.routes';
-import reviewRoutes from './routes/review.routes';
-import inventoryRoutes from './routes/inventory.routes';
-import revenueRoutes from './routes/revenue.routes';
-import categoryRoutes from './routes/category.routes';
-import adminRoutes from './routes/admin.routes';
+import authRoutes from '../src/routes/auth.routes';
+import cartRoutes from '../src/routes/cart.routes';
+import orderRoutes from '../src/routes/order.routes';
+import productRoutes from '../src/routes/product.routes';
+import couponRoutes from '../src/routes/coupon.routes';
+import userRoutes from '../src/routes/user.routes';
+import blogRoutes from '../src/routes/blog.routes';
+import reviewRoutes from '../src/routes/review.routes';
+import inventoryRoutes from '../src/routes/inventory.routes';
+import revenueRoutes from '../src/routes/revenue.routes';
+import categoryRoutes from '../src/routes/category.routes';
+import adminRoutes from '../src/routes/admin.routes';
 
 dotenv.config();
 
