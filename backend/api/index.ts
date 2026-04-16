@@ -5,6 +5,7 @@ import helmet from 'helmet';
 import compression from 'compression';
 import morgan from 'morgan';
 import { rateLimit } from 'express-rate-limit';
+import { PrismaClient } from '@prisma/client';
 
 import authRoutes from '../src/routes/auth.routes';
 import cartRoutes from '../src/routes/cart.routes';
@@ -20,6 +21,9 @@ import categoryRoutes from '../src/routes/category.routes';
 import adminRoutes from '../src/routes/admin.routes';
 
 dotenv.config();
+
+// PrismaClient singleton for Serverless
+const prisma = new PrismaClient();
 
 const app = express();
 app.set('trust proxy', 1);
