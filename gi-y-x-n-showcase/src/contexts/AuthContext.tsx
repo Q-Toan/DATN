@@ -34,7 +34,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           setUser(response.data);
           setToken(storedToken);
         } catch (error: any) {
-          console.error("SESSION_EXPIRED // ABORTING_RECOVERY");
           logout();
         }
       }

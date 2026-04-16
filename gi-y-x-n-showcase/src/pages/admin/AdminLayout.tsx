@@ -28,7 +28,6 @@ const AdminLayout = () => {
 
   // Absolute block for non-admins
   if (!isAuthenticated || !isAdmin) {
-    console.warn("SECURITY_BREACH // ACCESS_DENIED: Non-admin attempted to visit admin area.");
     return <Navigate to="/" replace />;
   }
 
