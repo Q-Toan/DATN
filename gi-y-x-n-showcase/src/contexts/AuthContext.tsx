@@ -26,14 +26,22 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const storedUser = localStorage.getItem('user');
-    const storedToken = localStorage.getItem('token');
+    const checkSession = async () => {
+      const storedToken = localStorage.getItem('token');
+      if (storedToken) {
+        try {
+          const response = await api.get('/users/me');
+          setUser(response.data);
+          setToken(storedToken);
+        } catch (error: any) {
+          console.error("SESSION_EXPIRED // ABORTING_RECOVERY");
+          logout();
+        }
+      }
+      setIsLoading(false);
+    };
 
-    if (storedUser && storedToken) {
-      setUser(JSON.parse(storedUser));
-      setToken(storedToken);
-    }
-    setIsLoading(false);
+    checkSession();
   }, []);
 
   const login = (newToken: string, newUser: User) => {

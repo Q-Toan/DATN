@@ -47,3 +47,24 @@ export const toggleUserStatus = async (req: AuthRequest, res: Response) => {
     res.status(500).json({ message: 'Lỗi khi cập nhật trạng thái người dùng', error });
   }
 };
+export const getMe = async (req: AuthRequest, res: Response) => {
+  try {
+    const user = await prisma.user.findUnique({
+      where: { id: req.user?.id },
+      select: {
+        id: true,
+        email: true,
+        name: true,
+        role: true,
+      },
+    });
+
+    if (!user) {
+      return res.status(404).json({ message: 'Người dùng không tồn tại' });
+    }
+
+    res.json(user);
+  } catch (error) {
+    res.status(500).json({ message: 'Lỗi khi lấy thông tin cá nhân', error });
+  }
+};
