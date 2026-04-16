@@ -26,11 +26,13 @@ const AdminUsers = lazy(() => import("./pages/admin/AdminUsers"));
 const AdminOrders = lazy(() => import("./pages/admin/AdminOrders"));
 const AdminPosts = lazy(() => import("./pages/admin/AdminPosts"));
 
+const queryClient = new QueryClient();
+
 // Loading Fallback Component
 const PageLoader = () => (
   <div className="flex flex-col items-center justify-center min-h-[60vh] gap-4 uppercase font-black tracking-widest text-[10px] animate-pulse">
     <Loader2 className="w-12 h-12 text-primary animate-spin" />
-    <span>SYNCHRONIZING_SUGGESTION_ENGINE...</span>
+    <span>SYNCHRONIZING SUGGESTION ENGINE...</span>
   </div>
 );
 
