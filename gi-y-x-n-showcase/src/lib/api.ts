@@ -1,7 +1,8 @@
 import axios from 'axios';
 
+const BACKEND_URL = "https://my-sneaker-n89g08zkm-quoc-toans-projects.vercel.app";
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL,
+  baseURL: `${BACKEND_URL}/api`,
   headers: {
     'Content-Type': 'application/json',
   },
