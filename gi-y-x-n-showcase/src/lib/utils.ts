@@ -5,8 +5,13 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-// Hardcoded for production stability
-const BACKEND_URL = "https://my-sneaker-n89g08zkm-quoc-toans-projects.vercel.app";
+const isProd = import.meta.env.PROD;
+const DEFAULT_URL = isProd 
+  ? "https://my-sneaker-n89g08zkm-quoc-toans-projects.vercel.app" 
+  : "http://localhost:5000";
+
+const RAW_BACKEND_URL = import.meta.env.VITE_API_URL || import.meta.env.VITE_API_BASE_URL || DEFAULT_URL;
+const BACKEND_URL = RAW_BACKEND_URL.replace("/api", "");
 
 export function getAssetUrl(path?: string) {
   if (!path) return "";
