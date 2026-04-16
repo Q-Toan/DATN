@@ -2,7 +2,7 @@ import axios from 'axios';
 
 const isProd = import.meta.env.PROD;
 const DEFAULT_URL = isProd 
-  ? "https://my-sneaker-n89g08zkm-quoc-toans-projects.vercel.app" 
+  ? "https://my-sneaker-api.vercel.app" 
   : "http://localhost:5000";
 
 const BACKEND_URL = import.meta.env.VITE_API_URL || import.meta.env.VITE_API_BASE_URL || DEFAULT_URL;
