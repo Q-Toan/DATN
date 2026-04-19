@@ -10,6 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import api from "@/lib/api";
 import { toast } from "sonner";
+import { getAssetUrl } from "@/lib/utils";
 import ImageUpload from "@/components/admin/ImageUpload";
 
 interface Category {
