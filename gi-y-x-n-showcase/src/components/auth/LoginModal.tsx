@@ -16,6 +16,8 @@ interface LoginModalProps {
 
 const LoginModal = ({ children }: LoginModalProps) => {
   const [open, setOpen] = useState(false);
+  const [isRegister, setIsRegister] = useState(false);
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
@@ -32,33 +34,44 @@ const LoginModal = ({ children }: LoginModalProps) => {
     }
   }, []);
 
-  const handleLogin = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     try {
-      const response = await api.post("/auth/login", { email, password });
-      const { token, user } = response.data;
-      
-      login(token, user as User);
-      
-      // Handle Remember Me
-      if (rememberMe) {
-        localStorage.setItem("rememberedEmail", email);
+      if (isRegister) {
+        // REGISTER LOGIC
+        await api.post("/auth/register", { email, password, name });
+        toast.success("ĐĂNG KÝ THÀNH CÔNG // REGISTRATION SUCCESS");
+        // Automatically switch to login or just login directly?
+        // Let's switch to login for simplicity or just perform login
+        const loginRes = await api.post("/auth/login", { email, password });
+        const { token, user } = loginRes.data;
+        login(token, user as User);
       } else {
-        localStorage.removeItem("rememberedEmail");
+        // LOGIN LOGIC
+        const response = await api.post("/auth/login", { email, password });
+        const { token, user } = response.data;
+        login(token, user as User);
+        
+        if (rememberMe) {
+          localStorage.setItem("rememberedEmail", email);
+        } else {
+          localStorage.removeItem("rememberedEmail");
+        }
       }
 
       toast.success("XÁC THỰC THÀNH CÔNG // ACCESS GRANTED");
       setOpen(false);
 
       // REDIRECT LOGIC
+      const user = JSON.parse(localStorage.getItem("user") || "{}");
       if (user.role === "ADMIN") {
         navigate("/admin");
       } else {
         navigate("/cart");
       }
     } catch (error: any) {
-      toast.error(error.response?.data?.message || "XÁC THỰC THẤT BẠI // ACCESS DENIED");
+      toast.error(error.response?.data?.message || "THAO TÁC THẤT BẠI // OPERATION FAILED");
     } finally {
       setLoading(false);
     }
@@ -70,7 +83,7 @@ const LoginModal = ({ children }: LoginModalProps) => {
         {children || (
           <Button variant="outline" className="h-14 px-8 border-primary/20 hover:bg-primary hover:text-black font-black tracking-widest text-[10px] uppercase transition-all">
             <LogIn className="w-4 h-4 mr-2" />
-            LOGIN SYSTEM
+            {isRegister ? "JOIN SYSTEM" : "LOGIN SYSTEM"}
           </Button>
         )}
       </DialogTrigger>
@@ -80,15 +93,33 @@ const LoginModal = ({ children }: LoginModalProps) => {
         
         <DialogHeader className="p-8 border-b border-primary/20 relative">
            <DialogTitle className="text-4xl font-black italic tracking-tighter text-primary uppercase">
-            AUTH TERMINAL
+            {isRegister ? "CREATE IDENTITY" : "AUTH TERMINAL"}
           </DialogTitle>
           <div className="text-[10px] font-bold text-muted-foreground mt-2 tracking-widest uppercase">
-            ENTER CREDENTIALS TO ACCESS SECURE SESSION
+            {isRegister ? "INITIALIZE NEW USER PROTOCOL" : "ENTER CREDENTIALS TO ACCESS SECURE SESSION"}
           </div>
         </DialogHeader>
 
-        <form onSubmit={handleLogin} className="p-8 space-y-8 relative">
+        <form onSubmit={handleSubmit} className="p-8 space-y-6 relative">
           <div className="space-y-4">
+            {isRegister && (
+              <div className="group relative">
+                <Label className="text-[10px] font-black text-primary/60 uppercase tracking-widest mb-2 block">
+                  [FULL NAME / IDENTITY]
+                </Label>
+                <Input
+                  type="text"
+                  placeholder="USER NAME"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  required={isRegister}
+                  disabled={loading}
+                  className="bg-secondary/50 border-primary/20 rounded-none h-14 focus:border-primary focus:ring-0 transition-all font-mono text-sm placeholder:text-muted-foreground/30 disabled:opacity-50"
+                />
+                <div className="absolute bottom-0 left-0 w-0 h-[2px] bg-primary group-hover:w-full transition-all duration-500" />
+              </div>
+            )}
+
             <div className="group relative">
               <Label className="text-[10px] font-black text-primary/60 uppercase tracking-widest mb-2 block">
                 [USER ID / EMAIL]
@@ -122,40 +153,55 @@ const LoginModal = ({ children }: LoginModalProps) => {
             </div>
           </div>
 
-          <div className="flex items-center space-x-3 group">
-            <Checkbox 
-              id="remember" 
-              checked={rememberMe} 
-              onCheckedChange={(checked) => setRememberMe(checked === true)}
-              className="border-primary/40 data-[state=checked]:bg-primary data-[state=checked]:text-black rounded-none transition-all"
-            />
-            <Label 
-              htmlFor="remember" 
-              className="text-[10px] font-black text-muted-foreground group-hover:text-primary cursor-pointer uppercase tracking-widest transition-colors flex items-center gap-2"
-            >
-              <ShieldCheck className={`w-3 h-3 ${rememberMe ? "text-primary" : "text-primary/20"}`} />
-              REMEMBER ACCOUNT DATA
-            </Label>
-          </div>
+          {!isRegister && (
+            <div className="flex items-center space-x-3 group">
+              <Checkbox 
+                id="remember" 
+                checked={rememberMe} 
+                onCheckedChange={(checked) => setRememberMe(checked === true)}
+                className="border-primary/40 data-[state=checked]:bg-primary data-[state=checked]:text-black rounded-none transition-all"
+              />
+              <Label 
+                htmlFor="remember" 
+                className="text-[10px] font-black text-muted-foreground group-hover:text-primary cursor-pointer uppercase tracking-widest transition-colors flex items-center gap-2"
+              >
+                <ShieldCheck className={`w-3 h-3 ${rememberMe ? "text-primary" : "text-primary/20"}`} />
+                REMEMBER ACCOUNT DATA
+              </Label>
+            </div>
+          )}
 
-          <Button 
-            type="submit" 
-            disabled={loading}
-            className="w-full h-16 bg-primary text-black rounded-none font-black text-lg tracking-tighter hover:bg-white transition-all group overflow-hidden relative"
-          >
-            {loading ? (
-              <Loader2 className="w-6 h-6 animate-spin" />
-            ) : (
-              <>
-                <span className="relative z-10 uppercase italic tracking-tighter">LOGIN SYSTEM</span>
-                <div className="absolute inset-0 bg-white translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
-              </>
-            )}
-          </Button>
+          <div className="space-y-4">
+            <Button 
+              type="submit" 
+              disabled={loading}
+              className="w-full h-16 bg-primary text-black rounded-none font-black text-lg tracking-tighter hover:bg-white transition-all group overflow-hidden relative"
+            >
+              {loading ? (
+                <Loader2 className="w-6 h-6 animate-spin" />
+              ) : (
+                <>
+                  <span className="relative z-10 uppercase italic tracking-tighter">
+                    {isRegister ? "INITIALIZE ACCOUNT" : "LOGIN SYSTEM"}
+                  </span>
+                  <div className="absolute inset-0 bg-white translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
+                </>
+              )}
+            </Button>
+
+            <Button
+              type="button"
+              variant="ghost"
+              onClick={() => setIsRegister(!isRegister)}
+              className="w-full text-[10px] font-black text-primary hover:bg-primary/10 rounded-none tracking-widest uppercase italic underline decoration-2 underline-offset-4"
+            >
+              {isRegister ? "ALREADY HAVE ACCOUNT? LOGIN" : "NEW USER? CREATE ACCOUNT"}
+            </Button>
+          </div>
 
           <div className="flex justify-between items-center text-[8px] font-black text-muted-foreground tracking-widest uppercase">
             <span>ENCRYPTION: AES-256</span>
-            <span>SECURE LOGIN V2.4</span>
+            <span>SECURE AUTH V3.1</span>
           </div>
         </form>
       </DialogContent>

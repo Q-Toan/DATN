@@ -10,7 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import api from "@/lib/api";
 import { toast } from "sonner";
-import { getAssetUrl } from "@/lib/utils";
+import ImageUpload from "@/components/admin/ImageUpload";
 
 interface Category {
   id: string;
@@ -297,12 +297,9 @@ const AdminProducts = () => {
                 />
               </div>
               <div className="grid gap-2">
-                <Label htmlFor="image" className="text-[10px] font-black text-primary tracking-widest uppercase mb-2 block">[IMAGE VECTOR LINK]</Label>
-                <Input
-                  id="image"
+                <ImageUpload
                   value={currentProduct?.images?.[0] || ""}
-                  onChange={(e) => setCurrentProduct({ ...currentProduct, images: [e.target.value] })}
-                  className="bg-secondary/50 border-primary/20 rounded-none h-14 focus:border-primary focus:ring-0 font-mono text-sm uppercase"
+                  onChange={(url) => setCurrentProduct({ ...currentProduct, images: [url] })}
                 />
               </div>
             </div>

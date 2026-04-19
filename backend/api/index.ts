@@ -19,6 +19,7 @@ import inventoryRoutes from '../src/routes/inventory.routes';
 import revenueRoutes from '../src/routes/revenue.routes';
 import categoryRoutes from '../src/routes/category.routes';
 import adminRoutes from '../src/routes/admin.routes';
+import uploadRoutes from '../src/routes/upload.routes';
 
 dotenv.config();
 
@@ -64,6 +65,7 @@ app.use('/api/inventory', inventoryRoutes);
 app.use('/api/revenue', revenueRoutes);
 app.use('/api/categories', categoryRoutes);
 app.use('/api/admin', adminRoutes);
+app.use('/api/upload', uploadRoutes);
 
 app.post('/api/orders/test', (req: Request, res: Response) => {
   res.json({ message: 'Orders route is reachable' });
