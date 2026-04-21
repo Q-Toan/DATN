@@ -42,7 +42,7 @@ const Index = () => {
   const featuredProducts = products.slice(8, 12);
 
   return (
-    <div className="min-h-screen bg-background lowercase">
+    <div className="min-h-screen bg-background">
       <Header />
 
       <main className="space-y-32 md:space-y-64 pb-32 pt-52">

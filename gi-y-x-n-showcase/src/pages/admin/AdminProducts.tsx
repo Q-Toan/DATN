@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Search, Plus, Pencil, Eye, EyeOff, Loader2 } from "lucide-react";
+import { Search, Plus, Pencil, Eye, EyeOff, Loader2, Trash2, AlertTriangle } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -32,6 +32,8 @@ interface Product {
     name: string;
   };
   images: string[];
+  colors: string[];
+  sizes: string[];
 }
 
 const formatPrice = (price: number) =>
@@ -44,6 +46,8 @@ const AdminProducts = () => {
   const ITEMS_PER_PAGE = 10;
 
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [productToDelete, setProductToDelete] = useState<string | null>(null);
   const [currentProduct, setCurrentProduct] = useState<Partial<Product> | null>(null);
 
   // FETCH PRODUCTS
@@ -94,6 +98,15 @@ const AdminProducts = () => {
       toast.success(`TÀI SẢN ĐANG ${res.data.isActive ? "HIỂN THỊ" : "TẠM ẨN"} // TOGGLE SUCCESS`);
     },
     onError: (err: any) => toast.error(err.response?.data?.message || "LỖI KHI THAY ĐỔI TRẠNG THÁI // TOGGLE ERROR")
+  });
+
+  const deleteMutation = useMutation({
+    mutationFn: (id: string) => api.delete(`/products/${id}`),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["admin-products"] });
+      toast.success("TÀI SẢN ĐÃ ĐƯỢC HỦY BỎ // ASSET DESTROYED");
+    },
+    onError: (err: any) => toast.error(err.response?.data?.message || "KHÔNG THỂ XÓA TÀI SẢN // DELETE DENIED")
   });
 
   const handleAdd = () => {
@@ -207,6 +220,17 @@ const AdminProducts = () => {
                     >
                       {toggleMutation.isPending ? <Loader2 className="w-4 h-4 animate-spin" /> : (p.isActive ? <Eye className="h-4 w-4" /> : <EyeOff className="h-4 w-4" />)}
                     </Button>
+                    <Button 
+                      variant="ghost" 
+                      size="icon" 
+                      className="text-destructive hover:bg-destructive hover:text-white rounded-none transition-all"
+                      onClick={() => {
+                        setProductToDelete(p.id);
+                        setIsDeleteDialogOpen(true);
+                      }}
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </Button>
                   </div>
                 </TableCell>
               </TableRow>
@@ -297,6 +321,26 @@ const AdminProducts = () => {
                   className="bg-secondary/50 border-primary/20 rounded-none h-14 focus:border-primary focus:ring-0 font-mono text-sm uppercase"
                 />
               </div>
+              <div className="grid grid-cols-2 gap-6">
+                <div className="space-y-2">
+                  <Label className="text-[10px] font-black text-primary tracking-widest uppercase mb-2 block">[COLOR VARIATIONS]</Label>
+                  <Input
+                    placeholder="E.G. RED, BLUE, BLACK"
+                    value={currentProduct?.colors?.join(", ") || ""}
+                    onChange={(e) => setCurrentProduct({ ...currentProduct, colors: e.target.value.split(",").map(s => s.trim()).filter(Boolean) })}
+                    className="bg-secondary/50 border-primary/20 rounded-none h-14 focus:border-primary focus:ring-0 font-mono text-sm uppercase"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label className="text-[10px] font-black text-primary tracking-widest uppercase mb-2 block">[SIZE VARIATIONS]</Label>
+                  <Input
+                    placeholder="E.G. 39, 40, 41, 42"
+                    value={currentProduct?.sizes?.join(", ") || ""}
+                    onChange={(e) => setCurrentProduct({ ...currentProduct, sizes: e.target.value.split(",").map(s => s.trim()).filter(Boolean) })}
+                    className="bg-secondary/50 border-primary/20 rounded-none h-14 focus:border-primary focus:ring-0 font-mono text-sm uppercase"
+                  />
+                </div>
+              </div>
               <div className="grid gap-2">
                 <ImageUpload
                   value={currentProduct?.images?.[0] || ""}
@@ -306,9 +350,38 @@ const AdminProducts = () => {
             </div>
           </div>
           <DialogFooter className="p-10 bg-secondary/20 border-t border-primary/20 flex flex-row gap-4">
-            <Button variant="outline" onClick={() => setIsDialogOpen(false)} className="flex-1 rounded-none border-primary/40 font-black h-16 uppercase tracking-widest hover:bg-primary/5">TERMINATE</Button>
-            <Button onClick={handleSave} className="flex-1 bg-primary text-black rounded-none font-black h-16 uppercase tracking-widest hover:bg-white transition-all uppercase">
+            <Button variant="outline" onClick={() => setIsDialogOpen(false)} className="flex-1 rounded-none border-primary/40 font-black h-16 uppercase tracking-widest hover:bg-primary/5 transition-all italic">TERMINATE</Button>
+            <Button onClick={handleSave} className="flex-1 bg-primary text-black rounded-none font-black h-16 uppercase tracking-widest hover:bg-white transition-all uppercase italic">
               {updateMutation.isPending || createMutation.isPending ? <Loader2 className="animate-spin" /> : "COMMIT ASSET"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+      {/* DELETE CONFIRMATION DIALOG */}
+      <Dialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
+        <DialogContent className="sm:max-w-[400px] bg-background border-4 border-destructive rounded-none p-0 overflow-hidden uppercase">
+          <div className="absolute inset-0 bg-destructive/5 pointer-events-none" />
+          <DialogHeader className="p-10 border-b border-destructive/20">
+            <div className="flex items-center gap-4 text-destructive mb-2">
+              <AlertTriangle className="h-8 w-8" />
+              <DialogTitle className="text-2xl font-black italic tracking-tighter uppercase">DESTRUCTIVE ACTION</DialogTitle>
+            </div>
+            <p className="text-[10px] font-bold text-muted-foreground tracking-widest leading-relaxed">
+              YOU ARE ABOUT TO PERMANENTLY DELETE THIS ASSET FROM THE ARCHIVE. THIS ACTION CANNOT BE REVERSED.
+            </p>
+          </DialogHeader>
+          <DialogFooter className="p-10 bg-secondary/20 flex flex-row gap-4">
+            <Button variant="outline" onClick={() => setIsDeleteDialogOpen(false)} className="flex-1 rounded-none border-primary/40 font-black h-16 uppercase tracking-widest hover:bg-primary/5">ABORT</Button>
+            <Button 
+              onClick={() => {
+                if (productToDelete) {
+                  deleteMutation.mutate(productToDelete);
+                  setIsDeleteDialogOpen(false);
+                }
+              }} 
+              className="flex-1 bg-destructive text-white rounded-none font-black h-16 uppercase tracking-widest hover:bg-red-700 transition-all"
+            >
+              CONFIRM DELETE
             </Button>
           </DialogFooter>
         </DialogContent>

@@ -272,7 +272,7 @@ const AdminPosts = () => {
             </div>
           </div>
           <DialogFooter className="p-10 bg-secondary/20 border-t border-primary/20 flex flex-row gap-4">
-             <Button variant="outline" onClick={() => setIsDialogOpen(false)} className="flex-1 rounded-none border-primary/40 font-black h-16 uppercase tracking-widest hover:bg-primary/5 transition-all">TERMINATE</Button>
+             <Button variant="outline" onClick={() => setIsDialogOpen(false)} className="flex-1 rounded-none border-primary/40 font-black h-16 uppercase tracking-widest hover:bg-primary/5 transition-all italic">TERMINATE</Button>
              <Button onClick={handleSave} className="flex-1 bg-primary text-black rounded-none font-black h-16 uppercase tracking-widest hover:bg-white transition-all uppercase italic">
                {createMutation.isPending || updateMutation.isPending ? <Loader2 className="animate-spin" /> : "COMMIT ENTRY"}
              </Button>
@@ -281,16 +281,17 @@ const AdminPosts = () => {
       </Dialog>
       
       <AlertDialog open={isConfirmDeleteOpen} onOpenChange={setIsConfirmDeleteOpen}>
-        <AlertDialogContent className="bg-background border-4 border-destructive rounded-none p-10 uppercase">
-          <AlertDialogHeader>
-            <AlertDialogTitle className="text-3xl font-black italic tracking-tighter text-destructive uppercase">PURGE CONFIRMATION</AlertDialogTitle>
-            <AlertDialogDescription className="text-xs font-bold tracking-widest text-muted-foreground uppercase leading-loose">
+        <AlertDialogContent className="max-w-[500px] bg-background border-4 border-destructive rounded-none p-0 overflow-hidden uppercase">
+           <div className="absolute inset-0 bg-destructive/5 pointer-events-none" />
+           <AlertDialogHeader className="p-10 border-b border-destructive/20">
+            <AlertDialogTitle className="text-4xl font-black italic tracking-tighter text-destructive uppercase">PURGE CONFIRMATION</AlertDialogTitle>
+            <AlertDialogDescription className="text-[10px] font-bold tracking-widest text-muted-foreground uppercase leading-loose mt-4">
                HÀNH ĐỘNG NÀY SẼ XÓA VĨNH VIỄN BẢN GHI KHỎI LƯU TRỮ TRUNG TÂM. DỮ LIỆU SẼ KHÔNG THỂ KHÔI PHỤC. // OPERATION IRREVERSIBLE
             </AlertDialogDescription>
           </AlertDialogHeader>
-          <AlertDialogFooter className="mt-8 flex gap-4">
-            <AlertDialogCancel className="flex-1 rounded-none border-primary/20 h-14 font-black tracking-widest uppercase">ABORT PURGE</AlertDialogCancel>
-            <AlertDialogAction onClick={handleDelete} className="flex-1 bg-destructive text-white rounded-none h-14 font-black tracking-widest uppercase hover:bg-white hover:text-destructive transition-all">EXECUTE PURGE</AlertDialogAction>
+          <AlertDialogFooter className="p-10 bg-destructive/10 border-t border-destructive/20 flex flex-row gap-4">
+            <AlertDialogCancel className="flex-1 rounded-none border-destructive/20 h-16 font-black tracking-widest uppercase hover:bg-destructive/5 transition-all italic">ABORT PURGE</AlertDialogCancel>
+            <AlertDialogAction onClick={handleDelete} className="flex-1 bg-destructive text-white rounded-none h-16 font-black tracking-widest uppercase hover:bg-white hover:text-destructive transition-all italic">EXECUTE PURGE</AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>

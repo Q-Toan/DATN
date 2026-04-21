@@ -7,12 +7,14 @@ async function main() {
   console.log('Starting seeding...');
 
   // Clear existing data to avoid schema conflicts
+  await prisma.revenue.deleteMany({}); // Revenue depends on Order
+  await prisma.inventoryLog.deleteMany({}); // InventoryLog depends on Product
   await prisma.review.deleteMany({});
+  await prisma.order.deleteMany({});
   await prisma.product.deleteMany({});
   await prisma.category.deleteMany({});
   await prisma.coupon.deleteMany({});
-  await prisma.inventoryLog.deleteMany({});
-  await prisma.order.deleteMany({});
+  await prisma.cart.deleteMany({});
   await prisma.revenue.deleteMany({});
 
   // Create Users

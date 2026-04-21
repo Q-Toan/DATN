@@ -1,5 +1,5 @@
 import { Link, Outlet, useLocation } from "react-router-dom";
-import { Package, FolderTree, Users, LayoutDashboard, ArrowLeft, ShoppingCart, Newspaper, Loader2 } from "lucide-react";
+import { Package, FolderTree, Users, LayoutDashboard, ArrowLeft, ShoppingCart, Newspaper, Loader2, History } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/contexts/AuthContext";
 import { Navigate } from "react-router-dom";
@@ -10,6 +10,7 @@ const adminLinks = [
   { label: "Sản Phẩm", href: "/admin/products", icon: Package },
   { label: "Danh Mục", href: "/admin/categories", icon: FolderTree },
   { label: "Người Dùng", href: "/admin/users", icon: Users },
+  { label: "Kho Hàng", href: "/admin/inventory", icon: History },
   { label: "Tin Tức", href: "/admin/posts", icon: Newspaper },
 ];
 

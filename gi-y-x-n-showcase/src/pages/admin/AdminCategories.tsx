@@ -186,8 +186,8 @@ const AdminCategories = () => {
             </div>
           </div>
           <DialogFooter className="p-10 bg-secondary/20 border-t border-primary/20 flex flex-row gap-4">
-             <Button variant="outline" onClick={() => setIsDialogOpen(false)} className="flex-1 rounded-none border-primary/40 font-black h-16 uppercase tracking-widest hover:bg-primary/5 transition-all">TERMINATE</Button>
-             <Button onClick={handleSave} className="flex-1 bg-primary text-black rounded-none font-black h-16 uppercase tracking-widest hover:bg-white transition-all group overflow-hidden relative">
+             <Button variant="outline" onClick={() => setIsDialogOpen(false)} className="flex-1 rounded-none border-primary/40 font-black h-16 uppercase tracking-widest hover:bg-primary/5 transition-all italic">TERMINATE</Button>
+             <Button onClick={handleSave} className="flex-1 bg-primary text-black rounded-none font-black h-16 uppercase tracking-widest hover:bg-white transition-all group overflow-hidden relative italic">
                {createMutation.isPending || updateMutation.isPending ? <Loader2 className="w-5 h-5 animate-spin" /> : (
                  <>
                    <span className="relative z-10">COMMIT SECTOR</span>

@@ -78,7 +78,7 @@ const Header = () => {
                   <span className="text-[8px] font-black text-primary opacity-40 group-hover:opacity-100 transition-opacity">
                     [{link.id}]
                   </span>
-                  <span className="text-[10px] font-black tracking-[0.4em] text-foreground group-hover:text-primary transition-colors flex items-center">
+                  <span className="text-[10px] font-black tracking-[0.4em] text-foreground group-hover:text-primary transition-colors flex items-center uppercase">
                     {link.name}
                   </span>
                 </Link>

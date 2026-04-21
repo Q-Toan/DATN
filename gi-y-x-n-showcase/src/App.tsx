@@ -25,6 +25,7 @@ const AdminCategories = lazy(() => import("./pages/admin/AdminCategories"));
 const AdminUsers = lazy(() => import("./pages/admin/AdminUsers"));
 const AdminOrders = lazy(() => import("./pages/admin/AdminOrders"));
 const AdminPosts = lazy(() => import("./pages/admin/AdminPosts"));
+const AdminInventory = lazy(() => import("./pages/admin/AdminInventory"));
 
 const queryClient = new QueryClient();
 
@@ -58,6 +59,7 @@ const App = () => (
                   <Route path="categories" element={<AdminCategories />} />
                   <Route path="users" element={<AdminUsers />} />
                   <Route path="orders" element={<AdminOrders />} />
+                  <Route path="inventory" element={<AdminInventory />} />
                   <Route path="posts" element={<AdminPosts />} />
                 </Route>
                 <Route path="*" element={<NotFound />} />
