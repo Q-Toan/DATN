@@ -53,6 +53,7 @@ app.use(express.json());
 app.use('/uploads', express.static('public/uploads'));
 
 // Routes
+app.use('/api/upload', uploadRoutes); // Move up
 app.use('/api/auth', authRoutes);
 app.use('/api/cart', cartRoutes);
 app.use('/api/orders', orderRoutes);
@@ -65,10 +66,9 @@ app.use('/api/inventory', inventoryRoutes);
 app.use('/api/revenue', revenueRoutes);
 app.use('/api/categories', categoryRoutes);
 app.use('/api/admin', adminRoutes);
-app.use('/api/upload', uploadRoutes);
 
-app.post('/api/orders/test', (req: Request, res: Response) => {
-  res.json({ message: 'Orders route is reachable' });
+app.get('/api/upload/test', (req: Request, res: Response) => {
+  res.json({ message: 'Upload router is reachable' });
 });
 
 app.get('/', (req: Request, res: Response) => {

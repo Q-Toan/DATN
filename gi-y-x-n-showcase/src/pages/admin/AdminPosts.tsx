@@ -235,12 +235,12 @@ const AdminPosts = () => {
       </div>
 
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-        <DialogContent className="sm:max-w-[600px] bg-background border-4 border-primary rounded-none p-0 overflow-hidden uppercase">
+        <DialogContent className="sm:max-w-[500px] bg-background border-4 border-primary rounded-none p-0 overflow-hidden uppercase">
            <div className="absolute inset-0 bg-primary/5 pointer-events-none" />
-           <DialogHeader className="p-10 border-b border-primary/20">
+           <DialogHeader className="p-8 border-b border-primary/20">
             <DialogTitle className="text-4xl font-black italic tracking-tighter uppercase">{currentPost?.id ? "PATCH ENTRY" : "INITIALIZE ENTRY"}</DialogTitle>
           </DialogHeader>
-          <div className="p-10 space-y-8 relative">
+          <div className="p-8 space-y-6 relative">
             <div className="grid gap-6">
               <div className="space-y-2">
                 <Label htmlFor="title" className="text-[10px] font-black text-primary tracking-widest uppercase mb-2 block">[ENTRY TITLE]</Label>
@@ -271,7 +271,7 @@ const AdminPosts = () => {
               </div>
             </div>
           </div>
-          <DialogFooter className="p-10 bg-secondary/20 border-t border-primary/20 flex flex-row gap-4">
+          <DialogFooter className="p-8 bg-secondary/20 border-t border-primary/20 flex flex-row gap-4">
              <Button variant="outline" onClick={() => setIsDialogOpen(false)} className="flex-1 rounded-none border-primary/40 font-black h-16 uppercase tracking-widest hover:bg-primary/5 transition-all italic">TERMINATE</Button>
              <Button onClick={handleSave} className="flex-1 bg-primary text-black rounded-none font-black h-16 uppercase tracking-widest hover:bg-white transition-all uppercase italic">
                {createMutation.isPending || updateMutation.isPending ? <Loader2 className="animate-spin" /> : "COMMIT ENTRY"}

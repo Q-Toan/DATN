@@ -116,7 +116,7 @@ const AdminProducts = () => {
       price: 0,
       stock: 50,
       categoryId: "",
-      images: ["https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=400&h=400&fit=crop"],
+      images: [],
       isActive: true,
     });
     setIsDialogOpen(true);
@@ -192,9 +192,9 @@ const AdminProducts = () => {
           </TableHeader>
           <TableBody>
             {products.map((p: Product) => (
-              <TableRow key={p.id} className="hover:bg-primary/5 border-b border-primary/10 transition-colors h-24">
+              <TableRow key={p.id} className="hover:bg-primary/5 border-b border-primary/10 transition-colors h-18">
                 <TableCell>
-                  <img src={getAssetUrl(p.images?.[0])} alt={p.name} className="w-14 h-14 rounded-none object-cover border border-primary/20 grayscale hover:grayscale-0 transition-all duration-500" />
+                  <img src={getAssetUrl(p.images?.[0])} alt={p.name} className="w-10 h-10 rounded-none object-cover border border-primary/20 grayscale hover:grayscale-0 transition-all duration-500" />
                 </TableCell>
                 <TableCell className="font-black text-sm tracking-tight uppercase italic">{p.name}</TableCell>
                 <TableCell>
@@ -267,91 +267,103 @@ const AdminProducts = () => {
 
       {/* EDIT/CREATE DIALOG */}
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-        <DialogContent className="sm:max-w-[600px] bg-background border-4 border-primary rounded-none p-0 overflow-hidden uppercase">
+        <DialogContent className="sm:max-w-[750px] bg-background border-4 border-primary rounded-none p-0 overflow-hidden uppercase">
           <div className="absolute inset-0 bg-primary/5 pointer-events-none" />
-          <DialogHeader className="p-10 border-b border-primary/20">
+          <DialogHeader className="p-4 border-b border-primary/20">
             <DialogTitle className="text-4xl font-black italic tracking-tighter uppercase">{currentProduct?.id ? "UPDATE ASSET" : "INITIALIZE ASSET"}</DialogTitle>
           </DialogHeader>
-          <div className="p-10 space-y-8 relative">
-            <div className="grid gap-6">
-              <div className="space-y-2">
-                <Label htmlFor="name" className="text-[10px] font-black text-primary tracking-widest uppercase mb-2 block">[ASSET NAME]</Label>
-                <Input
-                  id="name"
-                  value={currentProduct?.name || ""}
-                  onChange={(e) => setCurrentProduct({ ...currentProduct, name: e.target.value })}
-                  className="bg-secondary/50 border-primary/20 rounded-none h-14 focus:border-primary focus:ring-0 font-mono text-sm uppercase"
-                />
-              </div>
-              <div className="grid grid-cols-2 gap-6">
-                 <div className="space-y-2">
-                    <Label htmlFor="category" className="text-[10px] font-black text-primary tracking-widest uppercase mb-2 block">[CATEGORIZATION]</Label>
-                    <Select
-                      value={currentProduct?.categoryId}
-                      onValueChange={(value) => setCurrentProduct({ ...currentProduct, categoryId: value })}
-                    >
-                      <SelectTrigger className="bg-secondary/50 border-primary/20 rounded-none h-14 focus:ring-0 uppercase">
-                        <SelectValue placeholder="SELECT CATEGORY" />
-                      </SelectTrigger>
-                      <SelectContent className="rounded-none border-primary uppercase">
-                        {categories.map((cat) => (
-                          <SelectItem key={cat.id} value={cat.id} className="focus:bg-primary focus:text-black hover:bg-primary hover:text-black font-bold uppercase">{cat.name}</SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                 </div>
-                 <div className="space-y-2">
-                    <Label htmlFor="stock" className="text-[10px] font-black text-primary tracking-widest uppercase mb-2 block">[AVAILABILITY QTY]</Label>
+          <div className="p-4 relative">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              {/* LEFT COLUMN: IMAGE & VARIATIONS */}
+              <div className="space-y-6">
+                <div className="bg-secondary/20 p-4 border border-primary/10">
+                  <ImageUpload
+                    value={currentProduct?.images?.[0] || ""}
+                    onChange={(url) => setCurrentProduct({ ...currentProduct, images: [url] })}
+                  />
+                </div>
+                <div className="space-y-4">
+                  <div className="space-y-2">
+                    <Label className="text-[10px] font-black text-primary tracking-widest uppercase mb-1 block">[COLOR VARIATIONS]</Label>
                     <Input
-                      id="stock"
-                      type="number"
-                      value={currentProduct?.stock || 0}
-                      onChange={(e) => setCurrentProduct({ ...currentProduct, stock: Number(e.target.value) })}
-                      className="bg-secondary/50 border-primary/20 rounded-none h-14 focus:border-primary focus:ring-0 font-mono text-sm uppercase"
+                      placeholder="E.G. RED, BLUE, BLACK"
+                      value={currentProduct?.colors?.join(", ") || ""}
+                      onChange={(e) => setCurrentProduct({ ...currentProduct, colors: e.target.value.split(",").map(s => s.trim()).filter(Boolean) })}
+                      className="bg-secondary/50 border-primary/20 rounded-none h-12 focus:border-primary focus:ring-0 font-mono text-sm uppercase"
                     />
-                 </div>
+                  </div>
+                  <div className="space-y-2">
+                    <Label className="text-[10px] font-black text-primary tracking-widest uppercase mb-1 block">[SIZE VARIATIONS]</Label>
+                    <Input
+                      placeholder="E.G. 39, 40, 41, 42"
+                      value={currentProduct?.sizes?.join(", ") || ""}
+                      onChange={(e) => setCurrentProduct({ ...currentProduct, sizes: e.target.value.split(",").map(s => s.trim()).filter(Boolean) })}
+                      className="bg-secondary/50 border-primary/20 rounded-none h-12 focus:border-primary focus:ring-0 font-mono text-sm uppercase"
+                    />
+                  </div>
+                </div>
               </div>
-              <div className="grid gap-2">
-                <Label htmlFor="price" className="text-[10px] font-black text-primary tracking-widest uppercase mb-2 block">[VALUATION VND]</Label>
-                <Input
-                  id="price"
-                  type="number"
-                  value={currentProduct?.price || ""}
-                  onChange={(e) => setCurrentProduct({ ...currentProduct, price: Number(e.target.value) })}
-                  className="bg-secondary/50 border-primary/20 rounded-none h-14 focus:border-primary focus:ring-0 font-mono text-sm uppercase"
-                />
-              </div>
-              <div className="grid grid-cols-2 gap-6">
+
+              {/* RIGHT COLUMN: CORE INFO */}
+              <div className="space-y-4">
                 <div className="space-y-2">
-                  <Label className="text-[10px] font-black text-primary tracking-widest uppercase mb-2 block">[COLOR VARIATIONS]</Label>
+                  <Label htmlFor="name" className="text-[10px] font-black text-primary tracking-widest uppercase mb-1 block">[ASSET NAME]</Label>
                   <Input
-                    placeholder="E.G. RED, BLUE, BLACK"
-                    value={currentProduct?.colors?.join(", ") || ""}
-                    onChange={(e) => setCurrentProduct({ ...currentProduct, colors: e.target.value.split(",").map(s => s.trim()).filter(Boolean) })}
-                    className="bg-secondary/50 border-primary/20 rounded-none h-14 focus:border-primary focus:ring-0 font-mono text-sm uppercase"
+                    id="name"
+                    value={currentProduct?.name || ""}
+                    onChange={(e) => setCurrentProduct({ ...currentProduct, name: e.target.value })}
+                    className="bg-secondary/50 border-primary/20 rounded-none h-12 focus:border-primary focus:ring-0 font-mono text-sm uppercase"
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label className="text-[10px] font-black text-primary tracking-widest uppercase mb-2 block">[SIZE VARIATIONS]</Label>
-                  <Input
-                    placeholder="E.G. 39, 40, 41, 42"
-                    value={currentProduct?.sizes?.join(", ") || ""}
-                    onChange={(e) => setCurrentProduct({ ...currentProduct, sizes: e.target.value.split(",").map(s => s.trim()).filter(Boolean) })}
-                    className="bg-secondary/50 border-primary/20 rounded-none h-14 focus:border-primary focus:ring-0 font-mono text-sm uppercase"
-                  />
+                  <Label htmlFor="category" className="text-[10px] font-black text-primary tracking-widest uppercase mb-1 block">[CATEGORIZATION]</Label>
+                  <Select
+                    value={currentProduct?.categoryId}
+                    onValueChange={(value) => setCurrentProduct({ ...currentProduct, categoryId: value })}
+                  >
+                    <SelectTrigger className="bg-secondary/50 border-primary/20 rounded-none h-12 focus:ring-0 uppercase">
+                      <SelectValue placeholder="SELECT CATEGORY" />
+                    </SelectTrigger>
+                    <SelectContent className="rounded-none border-primary uppercase">
+                      {categories.map((cat) => (
+                        <SelectItem key={cat.id} value={cat.id} className="focus:bg-primary focus:text-black hover:bg-primary hover:text-black font-bold uppercase">{cat.name}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                 </div>
-              </div>
-              <div className="grid gap-2">
-                <ImageUpload
-                  value={currentProduct?.images?.[0] || ""}
-                  onChange={(url) => setCurrentProduct({ ...currentProduct, images: [url] })}
-                />
+                <div className="grid grid-cols-2 gap-4">
+                   <div className="space-y-2">
+                      <Label htmlFor="stock" className="text-[10px] font-black text-primary tracking-widest uppercase mb-1 block">[AVAILABILITY QTY]</Label>
+                      <Input
+                        id="stock"
+                        type="number"
+                        value={currentProduct?.stock || 0}
+                        onChange={(e) => setCurrentProduct({ ...currentProduct, stock: Number(e.target.value) })}
+                        className="bg-secondary/50 border-primary/20 rounded-none h-12 focus:border-primary focus:ring-0 font-mono text-sm uppercase"
+                      />
+                   </div>
+                   <div className="space-y-2">
+                      <Label htmlFor="price" className="text-[10px] font-black text-primary tracking-widest uppercase mb-1 block">[VALUATION VND]</Label>
+                      <Input
+                        id="price"
+                        type="number"
+                        value={currentProduct?.price || ""}
+                        onChange={(e) => setCurrentProduct({ ...currentProduct, price: Number(e.target.value) })}
+                        className="bg-secondary/50 border-primary/20 rounded-none h-12 focus:border-primary focus:ring-0 font-mono text-sm uppercase"
+                      />
+                   </div>
+                </div>
+                <div className="pt-4 border-t border-primary/10">
+                   <p className="text-[9px] font-bold text-muted-foreground leading-relaxed italic uppercase">
+                     * ĐẢM BẢO TẤT CẢ THÔNG TIN ĐÃ ĐƯỢC KIỂM CHỨNG TRƯỚC KHI LƯU VÀO HỆ THỐNG TRUNG TÂM. // VERIFY ALL DATA BEFORE COMMIT
+                   </p>
+                </div>
               </div>
             </div>
           </div>
-          <DialogFooter className="p-10 bg-secondary/20 border-t border-primary/20 flex flex-row gap-4">
-            <Button variant="outline" onClick={() => setIsDialogOpen(false)} className="flex-1 rounded-none border-primary/40 font-black h-16 uppercase tracking-widest hover:bg-primary/5 transition-all italic">TERMINATE</Button>
-            <Button onClick={handleSave} className="flex-1 bg-primary text-black rounded-none font-black h-16 uppercase tracking-widest hover:bg-white transition-all uppercase italic">
+          <DialogFooter className="p-4 bg-secondary/20 border-t border-primary/20 flex flex-row gap-4">
+            <Button variant="outline" onClick={() => setIsDialogOpen(false)} className="flex-1 rounded-none border-primary/40 font-black h-14 uppercase tracking-widest hover:bg-primary/5 transition-all italic">TERMINATE</Button>
+            <Button onClick={handleSave} className="flex-1 bg-primary text-black rounded-none font-black h-14 uppercase tracking-widest hover:bg-white transition-all uppercase italic">
               {updateMutation.isPending || createMutation.isPending ? <Loader2 className="animate-spin" /> : "COMMIT ASSET"}
             </Button>
           </DialogFooter>
@@ -359,19 +371,16 @@ const AdminProducts = () => {
       </Dialog>
       {/* DELETE CONFIRMATION DIALOG */}
       <Dialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
-        <DialogContent className="sm:max-w-[400px] bg-background border-4 border-destructive rounded-none p-0 overflow-hidden uppercase">
+        <DialogContent className="sm:max-w-[500px] bg-background border-4 border-destructive rounded-none p-0 overflow-hidden uppercase">
           <div className="absolute inset-0 bg-destructive/5 pointer-events-none" />
           <DialogHeader className="p-10 border-b border-destructive/20">
-            <div className="flex items-center gap-4 text-destructive mb-2">
-              <AlertTriangle className="h-8 w-8" />
-              <DialogTitle className="text-2xl font-black italic tracking-tighter uppercase">DESTRUCTIVE ACTION</DialogTitle>
-            </div>
-            <p className="text-[10px] font-bold text-muted-foreground tracking-widest leading-relaxed">
-              YOU ARE ABOUT TO PERMANENTLY DELETE THIS ASSET FROM THE ARCHIVE. THIS ACTION CANNOT BE REVERSED.
+            <DialogTitle className="text-4xl font-black italic tracking-tighter text-destructive uppercase">PURGE ASSET</DialogTitle>
+            <p className="text-[10px] font-bold text-muted-foreground tracking-widest leading-relaxed mt-4">
+              HÀNH ĐỘNG NÀY SẼ XÓA VĨNH VIỄN TÀI SẢN KHỎI LƯU TRỮ TRUNG TÂM. DỮ LIỆU SẼ KHÔNG THỂ KHÔI PHỤC. // OPERATION IRREVERSIBLE
             </p>
           </DialogHeader>
-          <DialogFooter className="p-10 bg-secondary/20 flex flex-row gap-4">
-            <Button variant="outline" onClick={() => setIsDeleteDialogOpen(false)} className="flex-1 rounded-none border-primary/40 font-black h-16 uppercase tracking-widest hover:bg-primary/5">ABORT</Button>
+          <DialogFooter className="p-10 bg-destructive/10 border-t border-destructive/20 flex flex-row gap-4">
+            <Button variant="outline" onClick={() => setIsDeleteDialogOpen(false)} className="flex-1 rounded-none border-destructive/20 h-16 font-black tracking-widest uppercase hover:bg-destructive/5 transition-all italic">ABORT PURGE</Button>
             <Button 
               onClick={() => {
                 if (productToDelete) {
@@ -379,7 +388,7 @@ const AdminProducts = () => {
                   setIsDeleteDialogOpen(false);
                 }
               }} 
-              className="flex-1 bg-destructive text-white rounded-none font-black h-16 uppercase tracking-widest hover:bg-red-700 transition-all"
+              className="flex-1 bg-destructive text-white rounded-none font-black h-16 uppercase tracking-widest hover:bg-white hover:text-destructive transition-all italic"
             >
               CONFIRM DELETE
             </Button>

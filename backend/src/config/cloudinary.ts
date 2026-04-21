@@ -10,6 +10,8 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
+import multer from 'multer';
+
 const storage = new CloudinaryStorage({
   cloudinary: cloudinary,
   params: {
@@ -20,4 +22,6 @@ const storage = new CloudinaryStorage({
   },
 });
 
-export { cloudinary, storage };
+const upload = multer({ storage });
+
+export { cloudinary, storage, upload };

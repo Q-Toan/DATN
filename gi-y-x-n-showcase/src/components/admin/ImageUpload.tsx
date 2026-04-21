@@ -34,7 +34,7 @@ const ImageUpload = ({ value, onChange, label = "[UPLOAD VECTOR ASSET]" }: Image
 
     setUploading(true);
     try {
-      const response = await api.post("/upload", formData, {
+      const response = await api.post("upload", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
@@ -75,7 +75,7 @@ const ImageUpload = ({ value, onChange, label = "[UPLOAD VECTOR ASSET]" }: Image
 
       <div className="relative group">
         {value ? (
-          <div className="relative aspect-video w-full overflow-hidden border-2 border-primary/20 bg-secondary/30 group">
+          <div className="relative aspect-square w-full max-w-[200px] overflow-hidden border-2 border-primary/20 bg-secondary/30 group">
              <img 
                src={value} 
                alt="Upload preview" 
@@ -86,7 +86,7 @@ const ImageUpload = ({ value, onChange, label = "[UPLOAD VECTOR ASSET]" }: Image
              </div>
           </div>
         ) : (
-          <div className="relative h-40 w-full border-2 border-dashed border-primary/20 bg-secondary/20 flex flex-col items-center justify-center transition-all hover:border-primary/50 group overflow-hidden">
+          <div className="relative h-32 w-full max-w-[200px] border-2 border-dashed border-primary/20 bg-secondary/20 flex flex-col items-center justify-center transition-all hover:border-primary/50 group overflow-hidden">
              {/* BACKGROUND DECORATION */}
              <div className="absolute inset-0 opacity-[0.03] pointer-events-none">
                 <div className="absolute top-0 left-0 w-full h-full" style={{ backgroundImage: 'radial-gradient(circle, var(--primary) 1px, transparent 1px)', backgroundSize: '20px 20px' }} />
